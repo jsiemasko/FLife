@@ -36,46 +36,50 @@ module GridHelpers =
 
     ///<summary>Grid of cells</summary>
     type Grid = Cell[][]
-    
+
     ///<summary>Get a cell from the grid</summary>
     let getCell (grid:Grid) (coord:Coord) = grid.[coord.Row].[coord.Col]
 
     ///<summary>Create a square grid of dead cells</summary>
-    let createGrid size : Grid =
+    let createGrid rows cols : Grid =
         let createRow row = 
-            [| for col in 1 .. size -> 
-                {Coord = {Col = col; Row = row}; Status = Dead } |]
-        [| for row in 1 .. size -> createRow row |]
+            [| for col in 1 .. cols -> 
+                {Coord = {Col = col; Row = row}; Status = Alive } |]
+        [| for row in 1 .. rows -> createRow row |]
+    
+    ///<summary>Get the max row number of a grid</summary>
+    let maxRow (grid:Grid) = grid.[0].Length - 1
+
+    ///<summary>Get the max col number of a grid</summary>
+    let maxCol (grid:Grid) = grid.Length - 1
 
     ///<summary>Get a sequence representing the grid row numbers</summary>
-    let rowsNumbers (grid:Grid) = 
-        let maxRow = grid.[0].Length - 1
-        {0 .. maxRow}
+    let rowsNumbers grid = {0 .. grid |> maxRow}
     
     ///<summary>Get a sequence representing the grid column numbers</summary>
-    let colNumbers (grid:Grid) = 
-        let maxCol = grid.Length - 1
-        {0 .. maxCol}
+    let colNumbers grid = {0 .. grid |> maxCol}
 
     ///<summary>Convert a grid to a single string for display purposes</summary>
     let convertGridToString (grid:Grid) =
         let convertRowToString rowNum = 
             [| for cell in grid.[rowNum] -> cell.Status.ToString() |] |> join ""
         [| for row in (grid |> rowsNumbers) -> row |> convertRowToString|] |> join Environment.NewLine
-
+    
+    ///<summary>Neighbor cells</summary>
     type Neighbors = seq<Cell>
 
     ///<summary>Get all neighboring cells</summary>
-    let getNeighbors (grid:Grid) target : Neighbors =
+    let getNeighbors (grid:Grid) (target:Cell) : Neighbors =
+        let offsets = 
+            [| {Row = -1 ; Col = -1} ; {Row = -1 ; Col = 0} ; {Row = -1 ; Col = 1}
+               {Row =  0 ; Col = -1} ;                        {Row =  0 ; Col = 1}
+               {Row =  1 ; Col = -1} ; {Row =  1 ; Col = 0} ; {Row =  1 ; Col = 1} |]
+        let validRows row = row >= 0 && row <= (grid |> maxRow)
+        let validCols col = col >= 0 && col <= (grid |> maxCol)
         let validCoord coord = 
-            coord.Row >= 0 && coord.Row <= grid.[0].Length - 1 
-            && coord.Col >= 0 && coord.Col <= grid.Length - 1
-        [| {Row = -1 ; Col = -1} ; {Row = -1 ; Col = 0} ; {Row = -1 ; Col = 1}
-           {Row =  0 ; Col = -1} ;                        {Row =  0 ; Col = 1}
-           {Row =  1 ; Col = -1} ; {Row =  1 ; Col = 0} ; {Row =  1 ; Col = 1} |]
-        |> Array.map (fun offset -> target + offset)
-        |> Array.where validCoord
-        |> Seq.map (getCell grid)
+            coord.Row |> validRows 
+            && coord.Col |> validCols
+        offsets |> Array.map (fun offset -> target.Coord + offset) |> Array.where validCoord |> Seq.map (getCell grid)
 
 module Game =
     open GridHelpers
@@ -89,7 +93,7 @@ module Game =
         >> Seq.length
 
     ///<summary>Based on current status and neighbor count should this cell live or die</summary>
-    let determineLife cell neighbors =
+    let getNextCellState cell neighbors =
         let newStatus =
             match cell.Status with
             | Alive -> 
@@ -103,31 +107,23 @@ module Game =
                 | _ -> Dead
         {cell with Status = newStatus}
 
+    let createNextGeneration (grid:Grid) = 
+        let generateNextGenerationCell cell = cell |> getNeighbors grid |> getNextCellState cell
+        let generateNextGenerationRow row = row |> Array.map generateNextGenerationCell
+        grid |> Array.map generateNextGenerationRow
+
 module Main =
     open GridHelpers
     open Game
 
     [<EntryPoint>]
     let main argv = 
-        createGrid 20 
-        |> convertGridToString 
-        |> printfn "%s"
-
+        let display = convertGridToString >> printfn "%s"
+        let mutable grid = createGrid 80 80
         
-        {Row = 0; Col = 0} |> getNeighbors (createGrid 20) |> Seq.length |> printf "%A"
-
-        (*
-        let grid = createGrid 20
-        grid 
-        |> rowsNumbers 
-
-        |> Seq.map (fun row -> 
-                        colNumbers |> Seq.map (fun col -> 
-                            let cell = grid |> getCell {Row = row; Col = col}
-                            cell)) |> printfn "%A"
-                            *)
-        //getNeighbors g {Row = 18; Col = 0} |> printfn "%A"
-
-
-        Console.ReadLine() |> ignore
+        {1..1000} |> Seq.iter (fun _ ->
+            grid <- grid |> createNextGeneration
+            grid |> display
+            10 |> Threading.Thread.Sleep
+            Console.Clear ())
         0
