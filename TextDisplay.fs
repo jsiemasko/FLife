@@ -12,8 +12,8 @@ module StringHelpers =
 
 [<AutoOpen>]
 module CellHelpers =
-    let statusDisplay (status : CellStatus) = 
-        match status with 
+    let statusDisplay (state : CellState) = 
+        match state with 
         | Dead -> "-"
         | Alive -> "+"
 
@@ -21,7 +21,7 @@ module CellHelpers =
 module GridHelpers =
     let private rowSeperator = System.String.Empty
     let private colSeperator = System.Environment.NewLine
-    let cellDisplay cell = cell.Status |> statusDisplay
+    let cellDisplay cell = cell.State |> statusDisplay
     
     ///<summary>Create a string display of the grid</summary>
     let gridDisplay : Grid -> string =

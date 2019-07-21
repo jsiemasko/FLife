@@ -22,16 +22,16 @@ module PointTests =
         let result = addPoints point1 point2
         Assert.AreEqual((4,6), result)
 
-module StatusTests =
+module StateTests =
     [<Test>]
     let ``isAlive returns true when alive`` () =
-        let aliveStatus = Alive |> isAlive
-        Assert.True(aliveStatus)
+        let aliveState = Alive |> isAlive
+        Assert.True(aliveState)
 
     [<Test>]
     let ``isAlive returns false when dead`` () =
-        let aliveStatus = Dead |> isAlive
-        Assert.False(aliveStatus)
+        let aliveState = Dead |> isAlive
+        Assert.False(aliveState)
 
 module CellTests =
     [<Test>]
@@ -41,10 +41,10 @@ module CellTests =
         Assert.AreEqual(point, cell.Point)
         
     [<Test>]
-    let ``createCell status equals default status`` () =
+    let ``createCell state equals default state`` () =
         let point = (1, 2)
         let cell = point |> createCell
-        Assert.AreEqual(defaultCellStatus, cell.Status)
+        Assert.AreEqual(defaultCellState, cell.State)
 
     [<Test>]
     let ``cellX returns X value`` () =
@@ -58,13 +58,13 @@ module CellTests =
 
     [<Test>]
     let ``isCellAlive returns true when alive`` () =
-        let aliveStatus = {Point = 0,0; Status = Alive} |> isCellAlive
-        Assert.True(aliveStatus)
+        let aliveState = {Point = 0,0; State = Alive} |> isCellAlive
+        Assert.True(aliveState)
 
     [<Test>]
     let ``isCellAlive returns false when dead`` () =
-        let aliveStatus = {Point = 0,0; Status = Dead} |> isCellAlive
-        Assert.False(aliveStatus)
+        let aliveState = {Point = 0,0; State = Dead} |> isCellAlive
+        Assert.False(aliveState)
 
     [<TestCase(0, false)>]
     [<TestCase(1, false)>]
@@ -75,10 +75,10 @@ module CellTests =
     [<TestCase(6, false)>]
     [<TestCase(7, false)>]
     [<TestCase(8, false)>]
-    let ``nextCellStatus alive produces expected status`` neighbors expectedStatus=
-        let cell = {Point = (0,0); Status = Alive}
-        let newStatus = cell |> nextCellStatus neighbors |> isCellAlive
-        Assert.AreEqual(expectedStatus, newStatus)
+    let ``nextCellState alive produces expected state`` neighbors expectedState=
+        let cell = {Point = (0,0); State = Alive}
+        let newState = cell |> nextCellState neighbors |> isCellAlive
+        Assert.AreEqual(expectedState, newState)
 
     [<TestCase(0, false)>]
     [<TestCase(1, false)>]
@@ -89,10 +89,10 @@ module CellTests =
     [<TestCase(6, false)>]
     [<TestCase(7, false)>]
     [<TestCase(8, false)>]
-    let ``nextCellStatus dead produces expected status`` neighbors expectedStatus=
-        let cell = {Point = (0,0); Status = Dead}
-        let newStatus = cell |> nextCellStatus neighbors |> isCellAlive
-        Assert.AreEqual(expectedStatus, newStatus)
+    let ``nextCellState dead produces expected state`` neighbors expectedState=
+        let cell = {Point = (0,0); State = Dead}
+        let newState = cell |> nextCellState neighbors |> isCellAlive
+        Assert.AreEqual(expectedState, newState)
 
     [<Test>]
     let ``pointsToFind returns expected results`` () =

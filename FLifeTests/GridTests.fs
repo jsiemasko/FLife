@@ -38,7 +38,7 @@ module GridTests =
             Seq.map (
                 fun point -> {
                     Point = point 
-                    Status = //Set one row to alive
+                    State = //Set one row to alive
                         match point with
                         | n when n |> getY = 1 -> Alive  
                         | _ -> Dead})
@@ -58,10 +58,10 @@ module GridTests =
         Next several tests confirm known forms work.  
         Examples of these forms: https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life
     *)
-    let createGridFromStates = List.toSeq >> Seq.map (fun (x, y, status) -> {Point = (x,y); Status = status})
+    let createGridFromStates = List.toSeq >> Seq.map (fun (x, y, state) -> {Point = (x,y); State = state})
     
     [<Test>]
-    let ``nextGridStatus block returns expected result`` () =
+    let ``nextGridState block returns expected result`` () =
         let startState = 
             [ (0,0,Dead) ; (0,1,Dead)  ; (0,2,Dead)  ; (0,3,Dead)
               (1,0,Dead) ; (1,1,Alive) ; (1,2,Alive) ; (1,3,Dead)
@@ -74,11 +74,11 @@ module GridTests =
               (2,0,Dead) ; (2,1,Alive) ; (2,2,Alive) ; (2,3,Dead)
               (3,0,Dead) ; (3,1,Dead)  ; (3,2,Dead)  ; (3,3,Dead) ]
             |> createGridFromStates
-        let nextState = startState |> nextGridStatus
+        let nextState = startState |> nextGridState
         Assert.AreEqual(expectedState, nextState)
 
     [<Test>]
-    let ``nextGridStatus blinker returns expected result`` () =
+    let ``nextGridState blinker returns expected result`` () =
         let startState = 
             [ (0,0,Dead) ; (0,1,Dead) ; (0,2,Dead)  ; (0,3,Dead) ; (0,4,Dead)
               (1,0,Dead) ; (1,1,Dead) ; (1,2,Alive) ; (1,3,Dead) ; (1,4,Dead)
@@ -93,5 +93,11 @@ module GridTests =
               (3,0,Dead) ; (3,1,Dead)  ; (3,2,Dead)  ; (3,3,Dead)  ; (3,4,Dead)
               (4,0,Dead) ; (4,1,Dead)  ; (4,2,Dead)  ; (4,3,Dead)  ; (4,4,Dead) ]
             |> createGridFromStates
-        let nextState = startState |> nextGridStatus
-        Assert.AreEqual(expectedState, nextState)
+        let mutable grid = startState |> nextGridState
+        Assert.AreEqual(expectedState, grid)
+        grid <- grid |> nextGridState
+        Assert.AreEqual(startState, grid)
+        grid <- grid |> nextGridState
+        Assert.AreEqual(expectedState, grid)
+        grid <- grid |> nextGridState
+        Assert.AreEqual(startState, grid)

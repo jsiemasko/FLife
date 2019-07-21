@@ -9,7 +9,6 @@
     <Compile Include="Cell.fs" />
     <Compile Include="Grid.fs" />
     <Compile Include="TextDisplay.fs" />
-    <Compile Include="Game.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 

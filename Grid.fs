@@ -24,10 +24,14 @@ let getValidNeighbors grid =
 let getNeighborCount grid target =
     target |> getValidNeighbors grid |> countLiving
 
-let nextGridStatus grid = 
+let nextGridState grid = 
     let addNeighborCount cell = (cell, cell.Point |> getNeighborCount grid)
-    let getNextStatus (cell,neighborCount) = cell |> nextCellStatus neighborCount
+    let getNextState (cell,neighborCount) = cell |> nextCellState neighborCount
     grid 
     |> Seq.map addNeighborCount 
-    |> Seq.map getNextStatus 
+    |> Seq.map getNextState 
+
+let createGenerations generations grid = 
+    let generationNumber = Seq.init generations (fun i -> i)
+    generationNumber |> Seq.scan (fun gridState _ -> gridState |> nextGridState) grid
     

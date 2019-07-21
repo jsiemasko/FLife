@@ -11,26 +11,26 @@ module Point =
         (newX,newY)
 
 [<AutoOpen>]
-module Status =
-    type CellStatus = Alive | Dead
-    let isAlive status =
-        match status with
+module State =
+    type CellState = Alive | Dead
+    let isAlive state =
+        match state with
             | Alive -> true
             | Dead -> false
 
 [<AutoOpen>]
 module Cell =
-    type Cell = {Point : Point ; Status : CellStatus}
-    let defaultCellStatus = Alive
-    let createCell point = {Point = point; Status = defaultCellStatus}
+    type Cell = {Point : Point ; State : CellState}
+    let defaultCellState = Alive
+    let createCell point = {Point = point; State = defaultCellState}
     let cellX cell = cell.Point |> getX
     let cellY cell = cell.Point |> getY
-    let isCellAlive cell = cell.Status |> isAlive
+    let isCellAlive cell = cell.State |> isAlive
 
-    ///<summary>Based on the current status and number of neighbors return the new status</summary>  
-    let nextCellStatus neighborCount cell =
-        let newStatus =
-            match cell.Status with
+    ///<summary>Based on the current state and number of neighbors return the new state</summary>  
+    let nextCellState neighborCount cell =
+        let newState =
+            match cell.State with
             | Alive -> 
                 match neighborCount with
                 | n when n < 2 -> Dead
@@ -40,7 +40,7 @@ module Cell =
                 match neighborCount with 
                 | 3 -> Alive
                 | _ -> Dead
-        {cell with Status = newStatus}
+        {cell with State = newState}
 
     [<AutoOpen>]
     module CellCollectionHelpers =
