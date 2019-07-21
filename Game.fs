@@ -1,15 +1,10 @@
-﻿namespace FLife.Game
+﻿
+namespace FLife.Game
 open FLife.Grid
-
+open FLife.Cell
+(*
 [<AutoOpen>]
 module Game =
-    ///<summary>Count the number of living neighbors</summary>
-    let countLiving : Neighbors -> int =
-        Seq.where (fun cell -> 
-                            match cell.Status with 
-                            | Alive -> true 
-                            | Dead -> false) 
-        >> Seq.length
 
     ///<summary>Based on current status and neighbor count should this cell live or die</summary>
     let getNextCellState cell neighbors =
@@ -29,4 +24,5 @@ module Game =
     let createNextGeneration (grid:Grid) = 
         let generateNextGenerationCell cell = cell |> getNeighbors grid |> getNextCellState cell
         let generateNextGenerationRow row = row |> Array.map generateNextGenerationCell
-        grid |> Array.map generateNextGenerationRow
+        grid |> Seq.map generateNextGenerationRow
+        *)

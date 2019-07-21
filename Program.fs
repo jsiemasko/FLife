@@ -1,17 +1,27 @@
 ﻿module FLife.Program
+open FLife.Cell
 open FLife.Grid
-open FLife.Game
+open FLife.TextDisplay
+//open FLife.Game
 open System
 
 module Main =
     [<EntryPoint>]
     let main argv = 
-        let display = convertGridToString >> printfn "%s"
-        let mutable grid = createGrid 80 80
+        let display = gridDisplay >> printfn "%s"
+
+        let grid = createGrid 10 5
+        grid |> display
+        grid |> nextGridStatus |> display
+        grid |> nextGridStatus |> nextGridStatus |> display
+        (*
+        let display = createGridDisplay >> printfn "%s"
+        let mutable grid = createGrid 20 20
         
-        {1..1000} |> Seq.iter (fun _ ->
+        {1..10} |> Seq.iter (fun _ ->
             grid <- grid |> createNextGeneration
             grid |> display
-            10 |> Threading.Thread.Sleep
+            1000 |> Threading.Thread.Sleep
             Console.Clear ())
+        *)
         0
