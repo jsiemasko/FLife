@@ -5,7 +5,7 @@ open FLife.Cell
 type Grid = Cell seq
 
 let createGrid numOfRows numOfCols =
-    let allPoints = {0 .. numOfCols} |> Seq.allPairs {0.. numOfRows} 
+    let allPoints = {0 .. numOfCols - 1} |> Seq.allPairs {0.. numOfRows - 1} 
     allPoints |> Seq.map createCell
 
 let countLiving = Seq.where isCellAlive >> Seq.length
