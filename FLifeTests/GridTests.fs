@@ -33,9 +33,9 @@ module GridTests =
 
     [<Test>]
     let ``countLiving returns expected value`` () =
-        let generatePairs = (seq {0..4}, seq {0..1}) ||> Seq.allPairs         
+        let generatePairs = (seq {0..4}, seq {0..1}) ||> Seq.allPairs  |> Seq.toList       
         let convertPairToCell = 
-            Seq.map (
+            List.map (
                 fun point -> {
                     Point = point 
                     State = //Set one row to alive
@@ -58,7 +58,7 @@ module GridTests =
         Next several tests confirm known forms work.  
         Examples of these forms: https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life
     *)
-    let createGridFromStates = List.toSeq >> Seq.map (fun (x, y, state) -> {Point = (x,y); State = state})
+    let createGridFromStates = List.map (fun (x, y, state) -> {Point = (x,y); State = state})
     
     [<Test>]
     let ``nextGridState block returns expected result`` () =
