@@ -9,17 +9,25 @@ let createGrid numOfRows numOfCols =
     allPoints |> Seq.map createCell
 
 let countLiving = Seq.where isCellAlive >> Seq.length
-    
+
+let neighborOffsets =
+    [ (-1,-1) ; (-1, 0) ; (-1, 1)
+      ( 0,-1) ;           ( 0, 1)
+      ( 1,-1) ; ( 1, 0) ; ( 1, 1) ]
+
+let neighborPoints targetPoint = 
+    neighborOffsets |> Seq.map (addPoints targetPoint)
+
+let getValidNeighbors grid =
+    neighborPoints >> getCells grid
+     
 let getNeighborCount grid target =
-    let offsets = 
-        [| (-1,-1) ; ( 0,-1) ; ( 1,-1)
-           (-1, 0) ;           (-1, 1)
-           (-1,-1) ; ( 0, 1) ; ( 1, 1) |]
-    offsets |> Seq.map (addPoints target.Point) |> getCells grid |> countLiving
+    target |> getValidNeighbors grid |> countLiving
 
 let nextGridStatus grid = 
-    let addNeighborCount cell = cell, cell |> getNeighborCount grid
+    let addNeighborCount cell = (cell, cell.Point |> getNeighborCount grid)
     let getNextStatus (cell,neighborCount) = cell |> nextCellStatus neighborCount
     grid 
     |> Seq.map addNeighborCount 
     |> Seq.map getNextStatus 
+    
