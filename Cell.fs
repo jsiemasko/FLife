@@ -13,7 +13,6 @@ module Point =
 [<AutoOpen>]
 module Status =
     type CellStatus = Alive | Dead
-    let defaultCellStatus = Alive
     let isAlive status =
         match status with
             | Alive -> true
@@ -22,9 +21,11 @@ module Status =
 [<AutoOpen>]
 module Cell =
     type Cell = {Point : Point ; Status : CellStatus}
+    let defaultCellStatus = Alive
+    let createCell point = {Point = point; Status = defaultCellStatus}
     let cellX cell = cell.Point |> getX
     let cellY cell = cell.Point |> getY
-    let cellIsAlive cell = cell.Status |> isAlive
+    let isCellAlive cell = cell.Status |> isAlive
 
     ///<summary>Based on the current status and number of neighbors return the new status</summary>  
     let nextCellStatus neighborCount cell =

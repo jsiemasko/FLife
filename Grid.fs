@@ -5,11 +5,10 @@ open FLife.Cell
 type Grid = Cell seq
 
 let createGrid numOfRows numOfCols =
-    let createCell point = {Point = point; Status = defaultCellStatus}
-    let allPoints = {1 .. numOfCols} |> Seq.allPairs {1.. numOfRows} 
+    let allPoints = {0 .. numOfCols} |> Seq.allPairs {0.. numOfRows} 
     allPoints |> Seq.map createCell
 
-let countLiving = Seq.where cellIsAlive >> Seq.length
+let countLiving = Seq.where isCellAlive >> Seq.length
     
 let getNeighborCount grid target =
     let offsets = 
