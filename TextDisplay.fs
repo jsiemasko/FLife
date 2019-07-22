@@ -14,7 +14,7 @@ module StringHelpers =
 module CellHelpers =
     let statusDisplay (state : CellState) = 
         match state with 
-        | Dead -> "-"
+        | Dead -> " "
         | Alive -> "+"
 
 [<AutoOpen>]
