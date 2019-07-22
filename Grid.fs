@@ -1,6 +1,7 @@
 ﻿module FLife.Grid
 
 open FLife.Cell
+open FSharp.Collections.ParallelSeq
 
 type Grid = Cell list
 
@@ -30,8 +31,11 @@ let nextGridState grid =
     let addNeighborCount cell = (cell, cell.Point |> getNeighborCount grid)
     let getNextState (cell,neighborCount) = cell |> nextCellState neighborCount
     grid 
-    |> List.map addNeighborCount 
-    |> List.map getNextState 
+    |> List.toSeq
+    |> PSeq.map addNeighborCount 
+    |> PSeq.map getNextState 
+    |> PSeq.sortBy (fun cell -> cell.Point)
+    |> Seq.toList
 
 let createGenerations generations grid = 
     let generationNumber = List.init generations (fun i -> i)
