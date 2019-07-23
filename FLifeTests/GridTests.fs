@@ -2,13 +2,14 @@ module FLife.GridTests
 
 open FLife.Cell
 open FLife.Grid
+open FLife.File
 open NUnit.Framework
 
 module GridTests =
     let grid = createGrid 10 10
     let aliveGrid = //For tests that don't want to rely on default alive state
         let allPoints = {0 .. 9} |> Seq.allPairs {0.. 9} 
-        allPoints |> Seq.map createCell
+        allPoints |> Seq.map (fun point -> {Point = point; State = Alive})
 
     [<Test>]
     let ``createGrid starts at 0,0`` () =
@@ -62,42 +63,33 @@ module GridTests =
     
     [<Test>]
     let ``nextGridState block returns expected result`` () =
-        let startState = 
-            [ (0,0,Dead) ; (0,1,Dead)  ; (0,2,Dead)  ; (0,3,Dead)
-              (1,0,Dead) ; (1,1,Alive) ; (1,2,Alive) ; (1,3,Dead)
-              (2,0,Dead) ; (2,1,Alive) ; (2,2,Alive) ; (2,3,Dead)
-              (3,0,Dead) ; (3,1,Dead)  ; (3,2,Dead)  ; (3,3,Dead) ]
-            |> createGridFromStates
-        let expectedState = 
-            [ (0,0,Dead) ; (0,1,Dead)  ; (0,2,Dead)  ; (0,3,Dead)
-              (1,0,Dead) ; (1,1,Alive) ; (1,2,Alive) ; (1,3,Dead)
-              (2,0,Dead) ; (2,1,Alive) ; (2,2,Alive) ; (2,3,Dead)
-              (3,0,Dead) ; (3,1,Dead)  ; (3,2,Dead)  ; (3,3,Dead) ]
-            |> createGridFromStates
+        let block = """
+----
+-++-
+-++-
+----"""
+        let startState = block |> parseStringToGrid
+        let expectedState = startState
         let nextState = startState |> nextGridState
         Assert.AreEqual(expectedState, nextState)
 
     [<Test>]
     let ``nextGridState blinker returns expected result`` () =
-        let startState = 
-            [ (0,0,Dead) ; (0,1,Dead) ; (0,2,Dead)  ; (0,3,Dead) ; (0,4,Dead)
-              (1,0,Dead) ; (1,1,Dead) ; (1,2,Alive) ; (1,3,Dead) ; (1,4,Dead)
-              (2,0,Dead) ; (2,1,Dead) ; (2,2,Alive) ; (2,3,Dead) ; (2,4,Dead)
-              (3,0,Dead) ; (3,1,Dead) ; (3,2,Alive) ; (3,3,Dead) ; (3,4,Dead)
-              (4,0,Dead) ; (4,1,Dead) ; (4,2,Dead)  ; (4,3,Dead) ; (4,4,Dead) ]
-            |> createGridFromStates
-        let expectedState = 
-            [ (0,0,Dead) ; (0,1,Dead)  ; (0,2,Dead)  ; (0,3,Dead)  ; (0,4,Dead)
-              (1,0,Dead) ; (1,1,Dead)  ; (1,2,Dead)  ; (1,3,Dead)  ; (1,4,Dead)
-              (2,0,Dead) ; (2,1,Alive) ; (2,2,Alive) ; (2,3,Alive) ; (2,4,Dead)
-              (3,0,Dead) ; (3,1,Dead)  ; (3,2,Dead)  ; (3,3,Dead)  ; (3,4,Dead)
-              (4,0,Dead) ; (4,1,Dead)  ; (4,2,Dead)  ; (4,3,Dead)  ; (4,4,Dead) ]
-            |> createGridFromStates
+        let blinkerState1 = """
+-----
+--+--
+--+--
+--+--
+-----"""
+        let blinkerState2 = """
+-----
+-----
+-+++-
+-----
+-----"""
+        let startState = blinkerState1 |> parseStringToGrid
+        let expectedState = blinkerState2 |> parseStringToGrid
         let mutable grid = startState |> nextGridState
-        Assert.AreEqual(expectedState, grid)
-        grid <- grid |> nextGridState
-        Assert.AreEqual(startState, grid)
-        grid <- grid |> nextGridState
         Assert.AreEqual(expectedState, grid)
         grid <- grid |> nextGridState
         Assert.AreEqual(startState, grid)

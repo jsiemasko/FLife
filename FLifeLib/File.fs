@@ -10,7 +10,7 @@ let parseStringToGrid (stringToParse:string) =
         Point = rowNum, colNum; 
         State = charToParse |> convertCharToState}
     let parseRow rowNum (rowString:string) = rowString |> Seq.mapi (convertToCell rowNum) |> Seq.toList
-    stringToParse.Split(Environment.NewLine) 
+    stringToParse.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries) 
     |> Array.toList
     |> List.mapi (fun rowNum rowString -> rowString |> parseRow rowNum)
     |> List.concat

@@ -21,7 +21,7 @@ module State =
 [<AutoOpen>]
 module Cell =
     type Cell = {Point : Point ; State : CellState}
-    let defaultCellState = Alive
+    let defaultCellState = Dead
     let createCell point = {Point = point; State = defaultCellState}
     let cellX cell = cell.Point |> getX
     let cellY cell = cell.Point |> getY

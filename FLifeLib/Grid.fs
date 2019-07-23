@@ -7,9 +7,8 @@ type Grid = Cell list
 
 let createGrid numOfRows numOfCols =
     let allPoints = 
-        {0 .. numOfCols - 1} |> Seq.toList 
-        |> List.allPairs ({0.. numOfRows - 1} |> Seq.toList) 
-    allPoints |> List.map createCell
+        {0 .. numOfCols - 1} |> Seq.allPairs {0.. numOfRows - 1}
+    allPoints |> Seq.toList |> List.map createCell
 
 let countLiving = List.where isCellAlive >> List.length
 
@@ -32,8 +31,7 @@ let nextGridState grid =
     let getNextState (cell,neighborCount) = cell |> nextCellState neighborCount
     grid 
     |> List.toSeq
-    |> PSeq.map addNeighborCount 
-    |> PSeq.map getNextState 
+    |> PSeq.map (addNeighborCount >> getNextState)
     |> PSeq.sortBy (fun cell -> cell.Point)
     |> Seq.toList
 
