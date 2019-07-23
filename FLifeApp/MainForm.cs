@@ -11,6 +11,7 @@ using static SkiaSharp.SKColors;
 using Microsoft.FSharp.Collections;
 using static SkiaSharp.SKPaintStyle;
 using System.Linq;
+using System.Collections.Concurrent;
 
 namespace FLifeApp
 {
@@ -23,12 +24,14 @@ namespace FLifeApp
         private int _strokeWidth = 12;
 
         public MainForm()
-            => InitializeComponent();
+        {
+            InitializeComponent();
+        }
 
         private void Timer1_Tick(object sender, EventArgs e)
         {
-            _grid = nextGridState(_grid);
             DisplayGrid(_grid);
+            _grid = nextGridState(_grid);
         }
 
         private void DisplayGrid(FSharpList<Cell.Cell> grid)
