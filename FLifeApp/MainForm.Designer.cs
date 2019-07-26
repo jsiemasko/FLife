@@ -1,4 +1,4 @@
-﻿namespace FLifeApp
+﻿namespace FLife.App
 {
     partial class MainForm
     {
@@ -39,9 +39,10 @@
             this.displayBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.displayBox.Location = new System.Drawing.Point(0, 0);
             this.displayBox.Name = "displayBox";
-            this.displayBox.Size = new System.Drawing.Size(549, 780);
+            this.displayBox.Size = new System.Drawing.Size(384, 361);
             this.displayBox.TabIndex = 0;
             this.displayBox.TabStop = false;
+            this.displayBox.Click += new System.EventHandler(this.DisplayBox_Click);
             // 
             // timer1
             // 
@@ -52,7 +53,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(549, 780);
+            this.ClientSize = new System.Drawing.Size(384, 361);
             this.Controls.Add(this.displayBox);
             this.Name = "MainForm";
             this.Text = "Form1";

@@ -93,6 +93,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\FLifeGraphics\FLifeGraphics.fsproj">
+      <Project>{c0744367-a422-49d5-b480-14c12fb92a0d}</Project>
+      <Name>FLifeGraphics</Name>
+    </ProjectReference>
     <ProjectReference Include="..\FLifeLib\FLifeLib.fsproj">
       <Project>{aaff769b-973c-4354-baef-cb1dc8e1f2cc}</Project>
       <Name>FLifeLib</Name>

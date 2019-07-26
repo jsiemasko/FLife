@@ -2,13 +2,22 @@
 
 open FLife.Cell
 open FSharp.Collections.ParallelSeq
+open System
 
 type Grid = Cell list
 
+let allPoints numOfCols numOfRows = 
+    {0 .. numOfCols - 1} |> Seq.allPairs {0.. numOfRows - 1}
+
 let createGrid numOfRows numOfCols =
-    let allPoints = 
-        {0 .. numOfCols - 1} |> Seq.allPairs {0.. numOfRows - 1}
-    allPoints |> Seq.toList |> List.map createCell
+    allPoints numOfCols numOfRows
+    |> Seq.toList 
+    |> List.map createCell
+
+let createGridWithRandomState numOfRows numOfCols (random:Random) =
+    allPoints numOfCols numOfRows
+    |> Seq.toList 
+    |> List.map (fun point -> random |> createCellWithRandomState point)
 
 let countLiving = List.where isCellAlive >> List.length
 

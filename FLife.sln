@@ -18,6 +18,8 @@ Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "FLifeLib", "FLifeLib\FLifeL
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FLifeApp", "FLifeApp\FLifeApp.csproj", "{A61A2307-4A7E-42BC-920D-D44705C4504D}"
 EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FLifeGraphics", "FLifeGraphics\FLifeGraphics.fsproj", "{C0744367-A422-49D5-B480-14C12FB92A0D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -40,6 +42,10 @@ Global
 		{A61A2307-4A7E-42BC-920D-D44705C4504D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A61A2307-4A7E-42BC-920D-D44705C4504D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A61A2307-4A7E-42BC-920D-D44705C4504D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C0744367-A422-49D5-B480-14C12FB92A0D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C0744367-A422-49D5-B480-14C12FB92A0D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C0744367-A422-49D5-B480-14C12FB92A0D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C0744367-A422-49D5-B480-14C12FB92A0D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -7,8 +7,9 @@ let parseStringToGrid (stringToParse:string) =
     let convertCharToState charToParse = 
         if charToParse = '+' then Alive else Dead
     let convertToCell rowNum colNum charToParse = {
-        Point = rowNum, colNum; 
-        State = charToParse |> convertCharToState}
+        Point = rowNum, colNum
+        State = charToParse |> convertCharToState
+        Generations = 0 }
     let parseRow rowNum (rowString:string) = rowString |> Seq.mapi (convertToCell rowNum) |> Seq.toList
     stringToParse.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries) 
     |> Array.toList
