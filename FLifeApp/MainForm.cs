@@ -10,7 +10,7 @@ namespace FLife.App
 {
     public partial class MainForm : Form
     {
-        private FSharpList<FLife.Cell.Cell> _grid = notQuiteRandom;
+        private FSharpList<FLife.Cell.Cell> _grid;
         private static readonly Random _random = new Random();
         private int _rows = 50;
         private int _cols = 50;
@@ -25,7 +25,7 @@ namespace FLife.App
         {
             var xScale = Width / _rows;
             var yScale = Height / _cols;
-            var stroke = Math.Min(xScale, yScale) - 3;
+            var stroke = Math.Max(xScale, yScale) - 3;
             displayBox.Image = new Bitmap(renderGrid(Width, Height, stroke, xScale, yScale, _grid));
             _grid = nextGridState(_grid);
         }

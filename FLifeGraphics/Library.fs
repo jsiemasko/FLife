@@ -15,31 +15,28 @@ module Graphics =
             paint.StrokeWidth <- strokeWidth
             paint.Style <- SKPaintStyle.Stroke
             paint
-        use color1 = new SKPaint() |> setColor (new SKColor(byte 80, byte 0, byte 0))
-        use color2 = new SKPaint() |> setColor (new SKColor(byte 100, byte 0, byte 0))
-        use color3 = new SKPaint() |> setColor (new SKColor(byte 130, byte 0, byte 0))
-        use color4 = new SKPaint() |> setColor (new SKColor(byte 170, byte 0, byte 0))
-        use color5 = new SKPaint() |> setColor (new SKColor(byte 210, byte 0, byte 0))
-        use color6 = new SKPaint() |> setColor (new SKColor(byte 250, byte 0, byte 0))
+        let palette = 
+            [80; 100; 130; 170; 210; 230] 
+            |> List.map (fun red -> 
+                new SKPaint() 
+                |> setColor (new SKColor(byte red, byte 0, byte 0)))
 
         let liveCells = grid |> List.where(fun cell -> cell.State = Alive)
         
         let draw (cell:Cell) = 
-            let x = (cell |> cellX) * xScale
-            let y = (cell |> cellY) * yScale
-            canvas.DrawRect(
-                x |> float32, 
-                y |> float32, 
-                1 |> float32,
-                1 |> float32, 
+            let x = ((cell |> cellX) * xScale) |> float32
+            let y = ((cell |> cellY) * yScale) |> float32
+            let height = 1 |> float32
+            let width = 1 |> float32
+            let generationColor = 
                 match cell.Generations with
-                | 0 -> color1
-                | 1 -> color2
-                | 2 -> color3
-                | 3 -> color4
-                | 4 -> color5
-                | _ -> color6
-                )
+                | g when g < 1 -> palette.[0]
+                | g when g < 2 -> palette.[1]
+                | g when g < 4 -> palette.[2]
+                | g when g < 6 -> palette.[3]
+                | g when g < 10 -> palette.[4]
+                | _ -> palette.[5]
+            canvas.DrawRect(x, y, height, width, generationColor)
 
         canvas.Clear SKColors.Black
         liveCells |> List.iter draw
