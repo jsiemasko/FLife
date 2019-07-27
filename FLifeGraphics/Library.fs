@@ -23,7 +23,6 @@ module Graphics =
         use color6 = new SKPaint() |> setColor (new SKColor(byte 250, byte 0, byte 0))
 
         let liveCells = grid |> List.where(fun cell -> cell.State = Alive)
-        let maxGenerations = liveCells |> List.map (fun cell -> cell.Generations) |> List.max
         
         let draw (cell:Cell) = 
             let x = (cell |> cellX) * xScale
