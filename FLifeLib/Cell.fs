@@ -52,10 +52,7 @@ let nextCellState neighborCount cell =
             | _ -> Dead
     {cell with 
         State = newState 
-        Generations = 
-            if cell.State = newState 
-            then cell.Generations + 1 
-            else cell.Generations }
+        Generations = if cell.State = newState then cell.Generations + 1 else 0 }
 
 [<AutoOpen>]
 module CellCollectionHelpers =
