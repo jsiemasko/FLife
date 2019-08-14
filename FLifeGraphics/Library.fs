@@ -21,7 +21,7 @@ module Graphics =
                 new SKPaint() 
                 |> setColor (new SKColor(byte red, byte 0, byte 0)))
 
-        let liveCells = grid |> List.where(fun cell -> cell.State = Alive)
+        let liveCells = grid |> List.where(fun cell -> cell.State = true)
         
         let draw (cell:Cell) = 
             let x = ((cell |> cellX) * xScale) |> float32

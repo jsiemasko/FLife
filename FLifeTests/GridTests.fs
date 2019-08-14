@@ -9,7 +9,7 @@ module GridTests =
     let grid = createGrid 10 10
     let aliveGrid = //For tests that don't want to rely on default alive state
         let allPoints = {0 .. 9} |> Seq.allPairs {0.. 9} 
-        allPoints |> Seq.map (fun point -> {Point = point; State = Alive})
+        allPoints |> Seq.map (fun point -> {Point = point; State = true; Generations = 0})
 
     [<Test>]
     let ``createGrid starts at 0,0`` () =
@@ -19,13 +19,13 @@ module GridTests =
     [<Test>]
     let ``createGrid ends X at expected value`` () =
         let xOverExpected = 
-            grid |> Seq.exists (fun cell -> cell.Point |> getX > 9)
+            grid |> Seq.exists (fun cell -> cell.Point |> fst > 9)
         Assert.False(xOverExpected)
 
     [<Test>]
     let ``createGrid ends Y at expected value`` () =
         let yOverExpected = 
-            grid |> Seq.exists (fun cell -> cell.Point |> getY > 9)
+            grid |> Seq.exists (fun cell -> cell.Point |> snd > 9)
         Assert.False(yOverExpected)
 
     [<Test>]
@@ -41,8 +41,9 @@ module GridTests =
                     Point = point 
                     State = //Set one row to alive
                         match point with
-                        | n when n |> getY = 1 -> Alive  
-                        | _ -> Dead})
+                        | n when n |> snd = 1 -> true  
+                        | _ -> false
+                    Generations = 0})
         let numberOfLiving = generatePairs |> convertPairToCell |> countLiving
         Assert.AreEqual(5, numberOfLiving)
 
@@ -59,7 +60,7 @@ module GridTests =
         Next several tests confirm known forms work.  
         Examples of these forms: https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life
     *)
-    let createGridFromStates = List.map (fun (x, y, state) -> {Point = (x,y); State = state})
+    let createGridFromStates = List.map (fun (x, y, state) -> {Point = (x,y); State = state; Generations = 0})
     
     [<Test>]
     let ``nextGridState block returns expected result`` () =

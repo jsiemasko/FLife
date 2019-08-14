@@ -5,51 +5,29 @@ open System
 [<AutoOpen>]
 module Point =
     type Point = int * int
-    let getX = fst
-    let getY = snd
-    let addPoints a b : Point = 
-        let newX = (a |> getX) + (b |> getX)
-        let newY = (a |> getY) + (b |> getY)
-        (newX,newY)
 
-[<AutoOpen>]
-module State =
-    type CellState = Alive | Dead
-    let isAlive state =
-        match state with
-            | Alive -> true
-            | Dead -> false
+    let addPoints a b : Point = 
+        ((fst a) + (fst b),(snd a) + (snd b))
 
 type Cell = {
     Point : Point
-    State : CellState
+    State : bool
     Generations : int}
-let defaultCellState = Dead
+let defaultCellState = false
 let createCell point = {Point = point; State = defaultCellState; Generations = 0}
 let createCellWithRandomState point (random:Random)= {
     Point = point
-    State = 
-        if random.NextDouble() > 0.5 
-        then Alive 
-        else Dead
+    State = random.NextDouble() > 0.5 
     Generations = 0}
-let cellX cell = cell.Point |> getX
-let cellY cell = cell.Point |> getY
-let isCellAlive cell = cell.State |> isAlive
+let cellX cell = cell.Point |> fst
+let cellY cell = cell.Point |> snd
 
 ///<summary>Based on the current state and number of neighbors return the new state</summary>  
 let nextCellState neighborCount cell =
     let newState =
         match cell.State with
-        | Alive -> 
-            match neighborCount with
-            | n when n < 2 -> Dead
-            | n when n > 3 -> Dead
-            | _ -> Alive
-        | Dead -> 
-            match neighborCount with 
-            | 3 -> Alive
-            | _ -> Dead
+        | true -> neighborCount = 2 || neighborCount = 3
+        | false -> neighborCount = 3
     {cell with 
         State = newState 
         Generations = if cell.State = newState then cell.Generations + 1 else 0 }

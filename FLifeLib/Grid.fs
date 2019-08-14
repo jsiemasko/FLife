@@ -19,7 +19,7 @@ let createGridWithRandomState numOfRows numOfCols (random:Random) =
     |> Seq.toList 
     |> List.map (fun point -> random |> createCellWithRandomState point)
 
-let countLiving = List.where isCellAlive >> List.length
+let countLiving = List.where (fun (cell:Cell) -> cell.State) >> List.length
 
 let neighborOffsets =
     [ (-1,-1) ; (-1, 0) ; (-1, 1)
@@ -41,7 +41,6 @@ let nextGridState grid =
     grid 
     |> List.toSeq
     |> PSeq.map (addNeighborCount >> getNextState)
-    |> PSeq.sortBy (fun cell -> cell.Point)
     |> Seq.toList
 
 let createGenerations generations grid = 
